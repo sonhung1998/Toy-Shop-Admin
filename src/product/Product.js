@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import APIClient from '../APIClient.js'
 import { useParams, Link } from 'react-router-dom'
 import { Card, Row, Input, Select, Button } from 'antd';
 import './Product.css';
@@ -12,8 +12,7 @@ const Product = () => {
     const { productId } = useParams();
     const fetchData = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:8080/api/product/${productId}`, {
-            });
+            const data = await APIClient.GET(`/product/${productId}`);
             console.log(data)
             setData(data);
         } catch (error) {

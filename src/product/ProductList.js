@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Row, Table, Icon, Divider, Tag, Card, Select, Col } from 'antd';
+import APIClient from '../APIClient.js'
+import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button } from 'antd';
 import { Link } from 'react-router-dom';
+import CollectionCreateForm from '../CollectionCreateForm.js'
 
 const ProductList = () => {
     const [data, setData] = useState(null);
-
+    const [visible, setVisible] = useState(false);
+    const [formRef, setFormRef] = useState(null);
+    const [reset, setReset] = useState(false);
     const fetchData = async () => {
         try {
-            const { data } = await axios.get('http://localhost:8080/api/products', {
-            });
-            console.log('data fetch:', data)
+            const data = await APIClient.GET('/products');
+            console.log(data)
             setData(data);
         } catch (error) {
             console.error('Error while fetch data:', error);
@@ -19,8 +21,51 @@ const ProductList = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [reset]);
 
+    const saveFormRef = formRef => {
+        setFormRef(formRef)
+    }
+
+    const handleCreateProduct = () => {
+        const { form } = formRef.props;
+        form.validateFields(async (err, values) => {
+            if (err) {
+                console.error('Error:', err)
+                return;
+            }
+            const manufacturer = {
+                id: parseInt(values.manufacturer)
+            }
+            const category = {
+                id: parseInt(values.category)
+            }
+            values = {
+                ...values,
+                manufacturer,
+                category
+            }
+            try {
+                await APIClient.POST('/product', values);
+            } catch (error) {
+                console.error('Lỗi xảy ra:', error)
+            }
+            form.resetFields();
+            setVisible(false);
+            setReset(!reset);
+        });
+
+    }
+
+    const handleDeleteProduct = async (id) => {
+        try {
+          await APIClient.DELETE(`product/${id}`);
+        } catch (error) {
+           console.error("Error occur while delete product:",error);
+        }
+        setReset(!reset);
+
+    }
     const columns = [
         {
             title: 'ID',
@@ -83,7 +128,10 @@ const ProductList = () => {
             render: (id) => {
                 return (
                     <div style={{ fontSize: 'x-large' }}>
-                        <Link>
+                        <Link onClick={
+                            () => { handleDeleteProduct(id) }
+                        }
+                        >
                             <Icon type="delete" />
                         </Link>
                         <Divider type="vertical" />
@@ -130,13 +178,25 @@ const ProductList = () => {
                </strong>
             </Divider>
             <Row>
+                <Button
+                    type="primary"
+                    icon="plus"
+                    onClick={() => { setVisible(true) }}>
+                    Thêm sản phẩm
+                </Button>
+                <CollectionCreateForm
+                    wrappedComponentRef={saveFormRef}
+                    visible={visible}
+                    onCancel={() => { setVisible(false) }}
+                    onCreate={handleCreateProduct}
+                />
+            </Row>
+            <Row>
                 <Table
                     columns={columns}
                     dataSource={data}
                     bordered
                 />
-
-
             </Row>
         </div>
     )
