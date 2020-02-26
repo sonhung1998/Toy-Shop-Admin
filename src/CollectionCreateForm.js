@@ -64,10 +64,9 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                             }
                         </Form.Item>
                         <Form.Item label="Nhà sản xuất">
-                            {getFieldDecorator('manufacturer')
+                            {getFieldDecorator('manufacturer.id')
                                 (<Select
                                     onChange={null}
-                                    defaultValue={null}
                                     >
                                     {MANUFACTURERS.map(item => {
                                         return (
@@ -82,10 +81,9 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
 
                         </Form.Item>
                         <Form.Item label="Thể loại">
-                            {getFieldDecorator('category')
+                            {getFieldDecorator('category.id')
                                 (<Select
                                     onChange={null}
-                                    defaultValue={null}
                                     >
                                     {CATEGORIES.map(item => {
                                         return (

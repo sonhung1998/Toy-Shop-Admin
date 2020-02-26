@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import APIClient from '../APIClient.js'
 import { useParams, Link } from 'react-router-dom'
-import { Card, Row, Input, Select, Button } from 'antd';
+import { Card, Icon, Input, Select, Button, Form, message, Upload } from 'antd';
 import './Product.css';
 import { MANUFACTURERS, CATEGORIES } from '../constant.js'
+import TextArea from 'antd/lib/input/TextArea';
+import GoBackButton from '../Utils/GoBackButton.js';
+import _ from 'lodash'
 const { Option } = Select;
 
-const Product = () => {
-
+const ProductFormUpdate = (props) => {
+    const { getFieldDecorator } = props.form;
     const [data, setData] = useState(null);
     const { productId } = useParams();
     const fetchData = async () => {
@@ -25,159 +28,239 @@ const Product = () => {
         fetchData();
     }, []);
 
-    const handleChangeSelect = (event) => {
-        console.log('handle change select:', event)
+
+    const validateName = (rule, value, callback) => {
+        const { form } = props;
+        const regex = RegExp('[\!\@\#\$\%\^\&\*\\\+\=\|\:\;\"\'\<\>\,\.\/\?]+', 'img')
+        if (value && regex.test(value)) {
+            callback("Trong tên không được phép chứa ký tự đặc biệt !")
+        }
+        else {
+            callback();
+        }
     }
+
+    const validateNumber = (rule, value, callback) => {
+        const regex = RegExp('[^0-9\.]+', 'img')
+        if (value && regex.test(value)) {
+            callback("Trường này chỉ được phép chứa ký tự số !")
+        }
+        else {
+            callback()
+        }
+
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        props.form.validateFieldsAndScroll(async (err, values) => {
+            if (!err) {
+                
+                console.log('data:', data)
+                let { upload } = values;
+                let { image } = data;
+                if (!_.isNil(upload) && !_.isEmpty(upload)) {
+                    image=upload[0].name
+                }
+                values={...values,image}
+                console.log("Received values of form: ", values);
+                // if (!_.isNil(image)
+                //     && !_.isNil(image.fileList)
+                //     && !_.isNil(image.fileList[0])) {
+                //     const { name } = image.fileList[0]
+                //     image = name
+                //     values = { ...values, image };
+                // }
+
+                try {
+                    await APIClient.PUT(`/product/${productId}`, values);
+                    message.success("Cập nhật sản phẩm thành công !", 3)
+                }
+                catch (error) {
+                    message.error(error, 20)
+                }
+
+            }
+        });
+    }
+
+    const normFile = e => {
+        console.log('Upload event:', e);
+        if (Array.isArray(e)) {
+            return e;
+        }
+        return e && e.fileList;
+    };
+
     return (
         <div>
             {data && <Card title="Thông tin sản phẩm">
-                <Row>
-                    <span>
-                        <strong>ID:</strong>
-                        <br />
-                        <Input style={{ width: '70%' }}
-                            defaultValue={productId}
-                            disabled
-                        >
-                        </Input>
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Tên</strong>
-                        <br />
-                        <Input
-                            style={{ width: '70%' }}
-                            defaultValue={data.name}
-                        >
-                        </Input>
-
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Miêu tả:</strong>
-                        <br />
-                        <Input.TextArea
-                            style={{ width: '70%' }}
-                            defaultValue={data.description}
-                            rows={4}
-                        />
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Ảnh:</strong>
-                        <br />
-                        <Input
-                            style={{ width: '70%' }}
-                            defaultValue={data.image}
-                        />
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Chiều dài</strong>
-                        <br />
-                        <Input style={{ width: '30%' }}
-                            addonAfter="mm"
-                            defaultValue={data.length}
-                        />
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Chiều rộng</strong>
-                        <br />
-                        <Input style={{ width: '30%' }}
-                            addonAfter="mm"
-                            defaultValue={data.width}
-                        />
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Chiều cao:</strong>
-                        <br />
-                        <Input style={{ width: '30%' }}
-                            addonAfter="mm"
-                            defaultValue={data.height}
-                        />
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Giá</strong>
-                        <br />
-                        <Input style={{ width: '40%' }}
-                            addonAfter="VND"
-                            defaultValue={data.price}
-                        />
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Thể loại:</strong>
-                        <br />
-                        <Select
-                            onChange={handleChangeSelect}
-                            defaultValue={data.category.name}
-                            style={{ width: '70%' }}>
-                            {CATEGORIES.map(item => {
-                                return (
-                                    <Option key={item.id}>
-                                        {item.value}
-                                    </Option>
-                                )
-                            })}
-                        </Select>
-                    </span>
-                </Row>
-                <Row>
-                    <span>
-                        <strong>Nhà sản xuất:</strong>
-                        <br />
-                        <Select
-                            defaultValue={data.manufacturer.name}
-                            style={{ width: '70%' }}>
-                            {MANUFACTURERS.map(item => {
-                                return (
-                                    <Option key={item.id}>
-                                        {item.value}
-                                    </Option>
-                                )
-                            })}
-                        </Select>
-                    </span>
-                </Row>
-                <Row>
-                    <Button
-                        type="primary"
-                        icon="setting"
-                        style={
-                            {
-                                marginRight: '20%',
-                                width: '40%',
-                                height: '40px'
-                            }
+                <Form onSubmit={handleSubmit}>
+                    <Form.Item label="ID" hasFeedback>
+                        {
+                            getFieldDecorator("id", {
+                                initialValue: `${productId}`,
+                            })
+                                (<Input disabled />)
                         }
-                    >
-                        Cập nhật
-                    </Button>
-                    <Link to="/products">
+                    </Form.Item>
+                    <Form.Item label="Tên" hasFeedback>
+                        {
+                            getFieldDecorator("name",
+                                {
+                                    initialValue: `${data.name}`,
+                                    rules: [
+                                        {
+                                            validator: validateName
+                                        }
+                                    ]
+                                })
+                                (<Input />)
+                        }
+                    </Form.Item>
+                    <Form.Item label="Miêu tả" >
+                        {
+                            getFieldDecorator("description", {
+                                initialValue: `${data.description}`,
+                            })
+                                (<TextArea rows={3} />)
+                        }
+                    </Form.Item>
+                    <Form.Item label="Chiều dài" >
+                        {
+                            getFieldDecorator("length", {
+                                initialValue: `${data.length}`,
+                                rules: [
+                                    { validator: validateNumber }
+
+                                ]
+                            })
+                                (<Input addonAfter="mm" />)
+                        }
+                    </Form.Item>
+                    <Form.Item label="Chiều rộng" >
+                        {
+                            getFieldDecorator("width", {
+                                initialValue: `${data.width}`,
+                                rules: [
+                                    { validator: validateNumber }
+
+                                ]
+                            })
+                                (<Input addonAfter="mm" />)
+                        }
+                    </Form.Item>
+                    <Form.Item label="Chiều cao" >
+                        {
+                            getFieldDecorator("height", {
+                                initialValue: `${data.height}`,
+                                rules: [
+                                    { validator: validateNumber }
+
+                                ]
+                            })
+                                (<Input addonAfter="mm" />)
+                        }
+                    </Form.Item>
+                    <Form.Item label="Giá" >
+                        {
+                            getFieldDecorator("price", {
+                                initialValue: `${data.price}`,
+                                rules: [
+                                    { validator: validateNumber }
+
+                                ]
+                            })
+                                (<Input addonAfter="VND" />)
+                        }
+                    </Form.Item>
+                    <Form.Item label="Nhà sản xuất" hasFeedback>
+                        {getFieldDecorator('manufacturer.id', {
+                            initialValue: `${data.manufacturer.id}`
+                        })
+                            (<Select>
+                                {MANUFACTURERS.map(item => {
+                                    return (
+                                        <Option key={item.id}>
+                                            {item.value}
+                                        </Option>
+                                    )
+                                })}
+                            </Select>)
+                        }
+                    </Form.Item>
+                    <Form.Item label="Thể loại" hasFeedback>
+                        {getFieldDecorator('category.id', {
+                            initialValue: `${data.category.id}`
+                        })
+                            (<Select>
+                                {CATEGORIES.map(item => {
+                                    return (
+                                        <Option key={item.id}>
+                                            {item.value}
+                                        </Option>
+                                    )
+                                })}
+                            </Select>)
+                        }
+                    </Form.Item>
+                    {/* <Form.Item label="Upload" extra="Thay đổi ảnh">
+                        {getFieldDecorator('upload', {
+                            valuePropName: 'fileList',
+                            getValueFromEvent: normFile,
+                        })(
+                            <Upload
+                                name="fileUpload"
+                                action="http://localhost:8080/api/product/upload"
+                                listType="picture"
+                                method="post">
+                                <Button>
+                                    <Icon type="upload" /> Click to upload
+                                </Button>
+                            </Upload>,
+                        )}
+                    </Form.Item> */}
+                    <Form.Item label="Upload">
+                        {
+                            getFieldDecorator('upload', {
+                                // initialValue: data.image,
+                                valuePropName: 'fileList',
+                                getValueFromEvent: normFile,
+                            })
+                                (
+                                    <Upload
+                                        name="fileUpload"
+                                        action="http://localhost:8080/api/product/upload"
+                                        method="post"
+                                    >
+                                        <Button>
+                                            <Icon type="upload" /> Click to upload
+                                        </Button>
+                                    </Upload>
+                                )
+                        }
+                    </Form.Item>
+
+                    <Form.Item style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
-                            style={{ width: '40%', height: '40px' }}
-                            icon="close-circle"
+                            icon="setting"
+                            style={{ marginRight: 389, width: 400 }}
+                            htmlType="submit"
                         >
-                            Hủy bỏ
-                    </Button>
-                    </Link>
-
-                </Row>
+                            Cập nhật
+                        </Button>
+                        <GoBackButton
+                            style={{ width: 400 }}
+                            name="Hủy bỏ"
+                        />
+                    </Form.Item>
+                </Form>
             </Card>}
         </div>
 
     )
 }
+const Product = Form.create({ name: "update_product_form" })(
+    ProductFormUpdate
+);
 export default Product

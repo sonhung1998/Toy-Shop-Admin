@@ -20,11 +20,18 @@ export default class APIClient {
             'Content-Type': 'application/json;charset=UTF-8',
         }
         const { data } = await Axios(headers).post(url, values);
-        return data
+        return data;
     }
     static DELETE = async (url) => {
         const { data } = await Axios().delete(url);
         return data
+    }
+    static PUT = async (url, values) => {
+        const headers = {
+            'Content-Type': 'application/json;charset=UTF-8',
+        }
+        const { data } = await Axios(headers).put(url, values);
+        return data;
     }
 
 }

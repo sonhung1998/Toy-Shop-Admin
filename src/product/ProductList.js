@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import APIClient from '../APIClient.js'
-import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button } from 'antd';
+import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button, Spin } from 'antd';
 import { Link } from 'react-router-dom';
 import CollectionCreateForm from '../CollectionCreateForm.js'
 
@@ -34,17 +34,6 @@ const ProductList = () => {
                 console.error('Error:', err)
                 return;
             }
-            const manufacturer = {
-                id: parseInt(values.manufacturer)
-            }
-            const category = {
-                id: parseInt(values.category)
-            }
-            values = {
-                ...values,
-                manufacturer,
-                category
-            }
             try {
                 await APIClient.POST('/product', values);
             } catch (error) {
@@ -59,9 +48,9 @@ const ProductList = () => {
 
     const handleDeleteProduct = async (id) => {
         try {
-          await APIClient.DELETE(`product/${id}`);
+            await APIClient.DELETE(`product/${id}`);
         } catch (error) {
-           console.error("Error occur while delete product:",error);
+            console.error("Error occur while delete product:", error);
         }
         setReset(!reset);
 
@@ -78,9 +67,23 @@ const ProductList = () => {
             key: 'name'
         },
         {
-            title: 'Miêu tả',
-            dataIndex: 'description',
-            key: 'description'
+            title: 'Ảnh',
+            dataIndex: 'image',
+            key: 'image',
+            render: (image) => {
+                if (image) {
+                    return (
+                        <img
+                            src={require('../../../Public/Images/'+image)||null}
+                            alt="product"
+                            height="150x"
+                            width="250px"
+                        />
+
+                    )
+                }
+
+            }
         },
         {
             title: 'Chiều dài',
@@ -96,6 +99,11 @@ const ProductList = () => {
             title: 'Chiều cao',
             dataIndex: 'height',
             key: 'height'
+        },
+        {
+            title: 'Giá',
+            dataIndex: 'price',
+            key: 'price'
         },
         {
             title: 'Nhà sản xuất',
@@ -181,7 +189,9 @@ const ProductList = () => {
                 <Button
                     type="primary"
                     icon="plus"
-                    onClick={() => { setVisible(true) }}>
+                    onClick={() => { setVisible(true) }}
+                    style={{ marginBottom: 20 }}
+                >
                     Thêm sản phẩm
                 </Button>
                 <CollectionCreateForm
@@ -192,11 +202,14 @@ const ProductList = () => {
                 />
             </Row>
             <Row>
+
                 <Table
                     columns={columns}
                     dataSource={data}
                     bordered
-                />
+                >
+                    <Spin></Spin>
+                </Table>
             </Row>
         </div>
     )
