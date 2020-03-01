@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import APIClient from '../APIClient.js'
+import APIClient from '../Utils/APIClient.js'
 import { useParams, Link } from 'react-router-dom'
 import { Card, Icon, Input, Select, Button, Form, message, Upload } from 'antd';
 import './Product.css';
@@ -54,22 +54,15 @@ const ProductFormUpdate = (props) => {
         e.preventDefault();
         props.form.validateFieldsAndScroll(async (err, values) => {
             if (!err) {
-                
+
                 console.log('data:', data)
                 let { upload } = values;
                 let { image } = data;
                 if (!_.isNil(upload) && !_.isEmpty(upload)) {
-                    image=upload[0].name
+                    image = upload[0].name
                 }
-                values={...values,image}
+                values = { ...values, image }
                 console.log("Received values of form: ", values);
-                // if (!_.isNil(image)
-                //     && !_.isNil(image.fileList)
-                //     && !_.isNil(image.fileList[0])) {
-                //     const { name } = image.fileList[0]
-                //     image = name
-                //     values = { ...values, image };
-                // }
 
                 try {
                     await APIClient.PUT(`/product/${productId}`, values);
@@ -175,7 +168,7 @@ const ProductFormUpdate = (props) => {
                     </Form.Item>
                     <Form.Item label="Nhà sản xuất" hasFeedback>
                         {getFieldDecorator('manufacturer.id', {
-                            initialValue: `${data.manufacturer.id}`
+                            initialValue: `${!_.isNil(data.manufacturer) ? data.manufacturer.id : 0}`
                         })
                             (<Select>
                                 {MANUFACTURERS.map(item => {
@@ -190,7 +183,7 @@ const ProductFormUpdate = (props) => {
                     </Form.Item>
                     <Form.Item label="Thể loại" hasFeedback>
                         {getFieldDecorator('category.id', {
-                            initialValue: `${data.category.id}`
+                            initialValue: `${_.isNil(data.category) ? 0 : data.category.id}`
                         })
                             (<Select>
                                 {CATEGORIES.map(item => {

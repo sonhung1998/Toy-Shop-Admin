@@ -1,6 +1,8 @@
 import axios from 'axios'
 import Qs from 'qs'
-let Axios = (headers = null) => {
+const jwtToken = sessionStorage.getItem('jwt');
+
+let Axios = (headers = null, params = null) => {
     return axios.create({
         paramsSerializer: params => Qs.stringify(params, { arrayFormat: 'repeat' }),
         baseURL: 'http://localhost:8080/api',
@@ -9,9 +11,20 @@ let Axios = (headers = null) => {
 }
 
 export default class APIClient {
+    request = async (method, path, headers = null, params = null, data) => {
+        const response = await Axios({
+            path,
+            method,
+            headers,
+            params,
+            data,
 
-    static GET = async (url) => {
-        const { data } = await Axios().get(url);
+        })
+        return response.data;
+    }
+
+    static GET = async (url, params = null) => {
+        const { data } = await Axios(params).get(url, { params });
         return data;
     }
 
@@ -19,7 +32,13 @@ export default class APIClient {
         const headers = {
             'Content-Type': 'application/json;charset=UTF-8',
         }
-        const { data } = await Axios(headers).post(url, values);
+        let data = null;
+        try {
+            const response = await Axios(headers).post(url, values);
+            data = response.data;
+        } catch (error) {
+            console.log('Lỗi xảy ra:', error)
+        }
         return data;
     }
     static DELETE = async (url) => {

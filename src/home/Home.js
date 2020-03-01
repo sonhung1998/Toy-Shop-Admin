@@ -1,15 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Home.css'
 import { Layout, Menu, Icon, Button, Row, Col, Badge, Avatar } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import { BrowserRouter as Router, Route, Link, NavLink, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect } from "react-router-dom";
 import ProductList from '../product/ProductList.js';
 import Product from '../product/Product.js'
+import APIClient from '../Utils/APIClient.js'
+import jwtDecode from 'jwt-decode'
+import _ from 'lodash'
+
 const { Header, Sider, Content, Footer } = Layout;
 
 
 const Home = (props) => {
+    const { history } = props;
     const [collapsed, setCollapsed] = useState(false);
+    const [user, setUser] = useState(null);
+
+    const getUserInfo = async () => {
+        if (_.isNil(sessionStorage.getItem('jwt'))) {
+            console.log('jwt is null')
+            return;
+        }
+        const { sub } = jwtDecode(sessionStorage.getItem('jwt'));
+        const data = await APIClient.GET(`/account/${sub}`);
+        if (data) {
+            setUser(data);
+        }
+    }
+
+    const signOut = () => {
+        sessionStorage.removeItem('jwt');
+        history.push('/login');
+    }
+
+    useEffect(() => {
+        getUserInfo();
+    }, []);
+
     return (
         <React.Fragment>
             <Layout>
@@ -23,7 +51,6 @@ const Home = (props) => {
                             style={{ fontSize: 'x-large', color: '#1890ff' }}>
                         </Icon>&emsp;
                         {collapsed !== true && <span>ADMIN</span>}
-
                     </div>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                         <Menu.Item key="1">
@@ -32,10 +59,14 @@ const Home = (props) => {
                                 <span>Trang chủ</span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="2">
-                            <Icon type="team" />
-                            <span>Người dùng</span>
-                        </Menu.Item>
+                        {
+                            user && user.role.description === "Admin"
+                            && <Menu.Item key="2">
+                                <Icon type="team" />
+                                <span>Người dùng</span>
+                            </Menu.Item>
+                        }
+
                         <Menu.Item key="3">
                             <Link
                                 to="/products">
@@ -80,7 +111,7 @@ const Home = (props) => {
                                             <SubMenu key="sub1"
                                                 title={
                                                     <span>
-                                                        <span>Hi, Amin</span>
+                                                        <span>Hi, {user && user.userName}</span>
                                                         &emsp;
                                                             <Avatar
                                                             // icon="user"
@@ -93,8 +124,10 @@ const Home = (props) => {
                                                         ></Avatar>
                                                     </span>
                                                 }>
-                                                <Menu.ItemGroup key="g1" title="Sign out">
-                                                </Menu.ItemGroup>
+                                                <Menu.Item
+                                                    onClick={() => { signOut() }}>
+                                                    Sign out
+                                                </Menu.Item>
 
                                             </SubMenu>
                                         </Menu>
@@ -112,16 +145,18 @@ const Home = (props) => {
                             minHeight: 575,
                         }}
                     >
-                        <Route
-                            path="/product/:productId"
-                            component={Product}
-                        />
-
-
-                        <Route
-                            path="/products"
-                            exact
-                            component={ProductList} />
+                        <Switch>
+                            <Route
+                                path="/product/:productId"
+                                component={Product}
+                                exact
+                            />
+                            <Route
+                                path="/products"
+                                exact
+                                component={ProductList}
+                            />
+                        </Switch>
 
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>

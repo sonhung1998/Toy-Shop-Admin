@@ -1,28 +1,38 @@
 const CATEGORIES = [
     {
+        id: 0,
+        value: 'Tất cả'
+    },
+
+    {
         id: 1,
-        value: 'ĐỒ CHƠI MÁY CẨU - MÁY XÚC'
+        value: 'Đồ chơi máy cẩu - máy xúc'
     },
     {
         id: 5,
-        value: 'Ô TÔ ĐIỆN'
+        value: 'Ô tô Điện'
 
     },
     {
         id: 6,
-        value: 'Ô TÔ ĐIỀU KHIỂN TỪ XA'
+        value: 'Ô tô điều khiển từ xa'
     },
     {
         id: 7,
-        value: 'Ô TÔ BẰNG GỖ'
+        value: 'Ô tô bằng gỗ'
     },
     {
         id: 8,
-        value: 'Ô TÔ BIẾN HÌNH'
+        value: 'Ô tô biến hình'
     }
 
 ]
 const MANUFACTURERS = [
+    {
+        id: 0,
+        value: 'Tất cả'
+    },
+
     {
         id: 1,
         value: 'Khang Vina'

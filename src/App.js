@@ -1,12 +1,20 @@
 import React from 'react';
 import Home from './home/Home.js'
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import LoginForm from './login/Login.js'
+import PrivateRouter from './PrivateRoute.js'
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Home />
+        <Switch>
+          
+          <Route exact path="/login" component={LoginForm} />
+
+          <PrivateRouter component={Home} />
+
+        </Switch>
       </BrowserRouter>
 
     </div>

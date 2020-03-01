@@ -1,17 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import APIClient from '../APIClient.js'
+import React, { useState, useEffect,useContext } from 'react';
+import APIClient from '../Utils/APIClient.js'
 import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button, Spin } from 'antd';
 import { Link } from 'react-router-dom';
 import CollectionCreateForm from '../CollectionCreateForm.js'
+import { CATEGORIES, MANUFACTURERS } from '../constant.js'
+const { Option } = Select;
 
 const ProductList = () => {
+ 
     const [data, setData] = useState(null);
     const [visible, setVisible] = useState(false);
     const [formRef, setFormRef] = useState(null);
     const [reset, setReset] = useState(false);
+    const [pageSize, setPageSize] = useState(5);
+    const [categoryId, setCategoryId] = useState(0);
+    const [manufacturerId, setManufacturerId] = useState(0);
+
+    const getParams = () => {
+        const params = {
+            categoryId,
+            manufacturerId
+        }
+        return params;
+    }
     const fetchData = async () => {
         try {
-            const data = await APIClient.GET('/products');
+            const data = await APIClient.GET('/products', getParams());
             console.log(data)
             setData(data);
         } catch (error) {
@@ -19,9 +33,23 @@ const ProductList = () => {
         }
     };
 
+    const handleChangeCategory = (record, value) => {
+        if (categoryId === value) {
+            return;
+        }
+        setCategoryId(value.key);
+    }
+
+    const handleChangeManufacturer = (record, value) => {
+        if (manufacturerId === value) {
+            return;
+        }
+        setManufacturerId(value.key);
+    }
+
     useEffect(() => {
         fetchData();
-    }, [reset]);
+    }, [reset, categoryId, manufacturerId]);
 
     const saveFormRef = formRef => {
         setFormRef(formRef)
@@ -55,6 +83,11 @@ const ProductList = () => {
         setReset(!reset);
 
     }
+
+    const oneChangePageSize = (current, size) => {
+        setPageSize(size);
+    }
+
     const columns = [
         {
             title: 'ID',
@@ -74,10 +107,10 @@ const ProductList = () => {
                 if (image) {
                     return (
                         <img
-                            src={require('../../../Public/Images/'+image)||null}
+                            src={require('../../../Public/Images/111.jpg')}
                             alt="product"
-                            height="150x"
-                            width="250px"
+                            height="120x"
+                            width="150px"
                         />
 
                     )
@@ -110,11 +143,13 @@ const ProductList = () => {
             dataIndex: 'manufacturer',
             key: 'manufacturer',
             render: (manufacturer) => {
-                return (
-                    <Tag color="geekblue" key={manufacturer.id}>
-                        {manufacturer.name}
-                    </Tag>
-                )
+                if (manufacturer) {
+                    return (
+                        <Tag color="geekblue" key={manufacturer.id}>
+                            {manufacturer.name}
+                        </Tag>
+                    )
+                }
             }
         },
         {
@@ -122,11 +157,14 @@ const ProductList = () => {
             dataIndex: 'category',
             key: 'category',
             render: (category) => {
-                return (
-                    <Tag color="geekblue" key={category.id}>
-                        {category.name}
-                    </Tag>
-                )
+                if (category) {
+                    return (
+                        <Tag color="geekblue" key={category.id}>
+                            {category.name}
+                        </Tag>
+                    )
+                }
+
             }
         }
         , {
@@ -164,7 +202,16 @@ const ProductList = () => {
                             <Select
                                 placeholder="Lọc theo nhà sản xuất"
                                 style={{ width: '90%', marginRight: '10px' }}
+                                defaultValue='0'
+                                onChange={handleChangeManufacturer}
                             >
+                                {MANUFACTURERS.map(item => {
+                                    return (
+                                        <Option key={item.id}>
+                                            {item.value}
+                                        </Option>
+                                    )
+                                })}
                             </Select>
                         </Col>
                         <Col span={12}>
@@ -174,7 +221,16 @@ const ProductList = () => {
                             <Select
                                 placeholder="Lọc theo thể loại"
                                 style={{ width: '90%' }}
+                                defaultValue='0'
+                                onChange={handleChangeCategory}
                             >
+                                {CATEGORIES.map(item => {
+                                    return (
+                                        <Option key={item.id}>
+                                            {item.value}
+                                        </Option>
+                                    )
+                                })}
                             </Select>
                         </Col>
                     </Row>
@@ -207,8 +263,20 @@ const ProductList = () => {
                     columns={columns}
                     dataSource={data}
                     bordered
+                    pagination={{
+                        pageSize: pageSize,
+                        position: 'both',
+                        showSizeChanger: true,
+                        pageSizeOptions: ['5', '10', '15'],
+                        onShowSizeChange: oneChangePageSize,
+
+                    }}
+                    scroll={{
+                        x: 'max-content',
+                        scrollToFirstRowOnChange: true,
+                    }}
                 >
-                    <Spin></Spin>
+
                 </Table>
             </Row>
         </div>
