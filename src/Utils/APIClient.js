@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Qs from 'qs'
-const jwtToken = sessionStorage.getItem('jwt');
 
 let Axios = (headers = null, params = null) => {
     return axios.create({

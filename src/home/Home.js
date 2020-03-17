@@ -4,6 +4,7 @@ import { Layout, Menu, Icon, Button, Row, Col, Badge, Avatar } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect } from "react-router-dom";
 import ProductList from '../product/ProductList.js';
+import OrderList from '../order/OrderList'
 import Product from '../product/Product.js'
 import APIClient from '../Utils/APIClient.js'
 import jwtDecode from 'jwt-decode'
@@ -75,10 +76,17 @@ const Home = (props) => {
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="4">
+                            <Link
+                                to="/orders">
+                                <Icon type="shopping-cart" />
+                                <span>Đơn hàng</span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="5">
                             <Icon type="unordered-list" />
                             <span>Thể loại</span>
                         </Menu.Item>
-                        <Menu.Item key="5">
+                        <Menu.Item key="6">
                             <Icon type="upload" />
                             <span>Upload</span>
                         </Menu.Item>
@@ -155,6 +163,12 @@ const Home = (props) => {
                                 path="/products"
                                 exact
                                 component={ProductList}
+                            />
+                            <Route
+                                path="/orders"
+                                exact
+                                component={OrderList}
+
                             />
                         </Switch>
 

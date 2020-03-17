@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import APIClient from '../Utils/APIClient.js'
 import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button, Spin } from 'antd';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { CATEGORIES, MANUFACTURERS } from '../constant.js'
 const { Option } = Select;
 
 const ProductList = () => {
- 
+
     const [data, setData] = useState(null);
     const [visible, setVisible] = useState(false);
     const [formRef, setFormRef] = useState(null);
@@ -107,10 +107,10 @@ const ProductList = () => {
                 if (image) {
                     return (
                         <img
-                            src={require('../../../Public/Images/111.jpg')}
+                            src={require(`../../../Public/Images/${image}`)}
                             alt="product"
                             height="120x"
-                            width="150px"
+                            width="auto"
                         />
 
                     )

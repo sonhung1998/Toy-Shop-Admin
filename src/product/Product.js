@@ -61,6 +61,7 @@ const ProductFormUpdate = (props) => {
                 if (!_.isNil(upload) && !_.isEmpty(upload)) {
                     image = upload[0].name
                 }
+                
                 values = { ...values, image }
                 console.log("Received values of form: ", values);
 
