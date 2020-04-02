@@ -3,7 +3,7 @@ import APIClient from '../Utils/APIClient.js'
 import { useParams, Link } from 'react-router-dom'
 import { Card, Icon, Input, Select, Button, Form, message, Upload } from 'antd';
 import './Product.css';
-import { MANUFACTURERS, CATEGORIES } from '../constant.js'
+import { MANUFACTURERS, CATEGORIES } from '../common/constant.js'
 import TextArea from 'antd/lib/input/TextArea';
 import GoBackButton from '../Utils/GoBackButton.js';
 import _ from 'lodash'

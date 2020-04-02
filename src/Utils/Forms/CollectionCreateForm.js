@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input, Radio, Select } from 'antd';
 import './CollectionCreateForm.css'
-import { CATEGORIES, MANUFACTURERS } from './constant'
+import { CATEGORIES, MANUFACTURERS } from '../../common/constant'
 const { Option } = Select;
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
     // eslint-disable-next-line

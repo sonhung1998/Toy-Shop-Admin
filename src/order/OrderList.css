@@ -1,0 +1,9 @@
+.ant-col p {
+  font-weight: bold;
+}
+.ant-card-body {
+    padding: 5px;
+}
+.ant-card-meta-detail{
+    padding-right: 40%;
+}

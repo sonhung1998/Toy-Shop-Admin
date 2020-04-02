@@ -51,4 +51,8 @@ const MANUFACTURERS = [
         value: 'Đồ chơi trẻ em phú thái'
     }
 ]
-export { CATEGORIES, MANUFACTURERS }
+
+const ORDERSTATUS = [
+    'PENDING', 'REJECT', 'SUCCESS'
+]
+export { CATEGORIES, MANUFACTURERS, ORDERSTATUS }

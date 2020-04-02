@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './Home.css'
-import { Layout, Menu, Icon, Button, Row, Col, Badge, Avatar } from 'antd';
+import { Layout, Menu, Icon, Row, Col, Badge, Avatar } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import ProductList from '../product/ProductList.js';
 import OrderList from '../order/OrderList'
 import Product from '../product/Product.js'
 import APIClient from '../Utils/APIClient.js'
 import jwtDecode from 'jwt-decode'
 import _ from 'lodash'
-
+import { useLocation } from "react-router-dom";
+import Order from '../order/Order';
 const { Header, Sider, Content, Footer } = Layout;
 
 
@@ -17,7 +18,13 @@ const Home = (props) => {
     const { history } = props;
     const [collapsed, setCollapsed] = useState(false);
     const [user, setUser] = useState(null);
+    const location = useLocation();
+    let pathName = location.pathname;
+    if (pathName.lastIndexOf("/") !== 0) {
+        pathName = pathName.slice(0, pathName.lastIndexOf("/")).concat("s");
+    }
 
+    console.log('path name:', pathName)
     const getUserInfo = async () => {
         if (_.isNil(sessionStorage.getItem('jwt'))) {
             console.log('jwt is null')
@@ -53,8 +60,12 @@ const Home = (props) => {
                         </Icon>&emsp;
                         {collapsed !== true && <span>ADMIN</span>}
                     </div>
-                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                        <Menu.Item key="1">
+                    <Menu
+                        theme="dark"
+                        mode="inline"
+                        defaultSelectedKeys={[`${pathName}`]}
+                    >
+                        <Menu.Item key="/">
                             <Link to="/">
                                 <Icon type="home" />
                                 <span>Trang chủ</span>
@@ -62,31 +73,31 @@ const Home = (props) => {
                         </Menu.Item>
                         {
                             user && user.role.description === "Admin"
-                            && <Menu.Item key="2">
+                            && <Menu.Item key="/users">
                                 <Icon type="team" />
                                 <span>Người dùng</span>
                             </Menu.Item>
                         }
 
-                        <Menu.Item key="3">
+                        <Menu.Item key="/products">
                             <Link
                                 to="/products">
                                 <Icon type="car" />
                                 <span>Sản phẩm</span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="4">
+                        <Menu.Item key="/orders">
                             <Link
                                 to="/orders">
                                 <Icon type="shopping-cart" />
                                 <span>Đơn hàng</span>
                             </Link>
                         </Menu.Item>
-                        <Menu.Item key="5">
+                        <Menu.Item key="/categories">
                             <Icon type="unordered-list" />
                             <span>Thể loại</span>
                         </Menu.Item>
-                        <Menu.Item key="6">
+                        <Menu.Item key="/upload">
                             <Icon type="upload" />
                             <span>Upload</span>
                         </Menu.Item>
@@ -168,7 +179,11 @@ const Home = (props) => {
                                 path="/orders"
                                 exact
                                 component={OrderList}
-
+                            />
+                            <Route
+                                path="/order/:orderId"
+                                exact
+                                component={Order}
                             />
                         </Switch>
 

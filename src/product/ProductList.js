@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import APIClient from '../Utils/APIClient.js'
 import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button, Spin } from 'antd';
 import { Link } from 'react-router-dom';
-import CollectionCreateForm from '../CollectionCreateForm.js'
-import { CATEGORIES, MANUFACTURERS } from '../constant.js'
+import CollectionCreateForm from '../Utils/Forms/CollectionCreateForm.js'
+import { CATEGORIES, MANUFACTURERS } from '../common/constant.js'
 const { Option } = Select;
 
 const ProductList = () => {
