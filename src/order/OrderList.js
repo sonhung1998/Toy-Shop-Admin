@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import APIClient from '../Utils/APIClient.js';
-import { Table, Divider, Tag, Card, Avatar, Row, Col, Icon } from 'antd';
+import { Table, Divider, Tag, Card, Avatar, Row, Col, Icon, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import _ from 'lodash'
@@ -143,13 +143,18 @@ const OrderList = (props) => {
             render: (id) => {
                 return (
                     <div style={{ fontSize: 'x-large' }}>
-                        <Link onClick={
-                            () => { handleDeleteOrder(id) }
-                        }
-                        >
-                            <Icon type="delete" />
-                        </Link>
+
+                        <Popconfirm
+                            placement="topLeft"
+                            title={"Bạn có chắc chắn muốn xóa đơn hàng này ?"}
+                            onConfirm={() => { handleDeleteOrder(id) }}
+                            okText="Có"
+                            cancelText="Không">
+                            <Icon type="delete" style={{ color: 'red' }}/>
+                        </Popconfirm>
+
                         <Divider type="vertical" />
+
                         <Link to={`order/${id}`}>
                             <Icon type="setting" />
                         </Link>

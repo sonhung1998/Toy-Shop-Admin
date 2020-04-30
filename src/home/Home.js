@@ -20,11 +20,11 @@ const Home = (props) => {
     const [user, setUser] = useState(null);
     const location = useLocation();
     let pathName = location.pathname;
+    
     if (pathName.lastIndexOf("/") !== 0) {
         pathName = pathName.slice(0, pathName.lastIndexOf("/")).concat("s");
     }
 
-    console.log('path name:', pathName)
     const getUserInfo = async () => {
         if (_.isNil(sessionStorage.getItem('jwt'))) {
             console.log('jwt is null')

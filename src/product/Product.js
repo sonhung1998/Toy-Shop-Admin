@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import APIClient from '../Utils/APIClient.js'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Card, Icon, Input, Select, Button, Form, message, Upload } from 'antd';
 import './Product.css';
 import { MANUFACTURERS, CATEGORIES } from '../common/constant.js'
@@ -30,7 +30,6 @@ const ProductFormUpdate = (props) => {
 
 
     const validateName = (rule, value, callback) => {
-        const { form } = props;
         const regex = RegExp('[\!\@\#\$\%\^\&\*\\\+\=\|\:\;\"\'\<\>\,\.\/\?]+', 'img')
         if (value && regex.test(value)) {
             callback("Trong tên không được phép chứa ký tự đặc biệt !")
@@ -50,6 +49,7 @@ const ProductFormUpdate = (props) => {
         }
 
     }
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         props.form.validateFieldsAndScroll(async (err, values) => {
@@ -61,7 +61,7 @@ const ProductFormUpdate = (props) => {
                 if (!_.isNil(upload) && !_.isEmpty(upload)) {
                     image = upload[0].name
                 }
-                
+
                 values = { ...values, image }
                 console.log("Received values of form: ", values);
 
