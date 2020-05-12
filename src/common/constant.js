@@ -55,4 +55,14 @@ const MANUFACTURERS = [
 const ORDERSTATUS = [
     'PENDING', 'REJECT', 'SUCCESS'
 ]
-export { CATEGORIES, MANUFACTURERS, ORDERSTATUS }
+const ROLE = [
+    {
+        id: 1,
+        value: 'Customer'
+    },
+    {
+        id: 2,
+        value: 'Admin'
+    }
+]
+export { CATEGORIES, MANUFACTURERS, ORDERSTATUS, ROLE }

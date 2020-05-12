@@ -11,13 +11,13 @@ const OrderList = (props) => {
     const [refresh, setRefresh] = useState(false);
 
     const findInOrderDetailList = (order, orderDetailList) => {
-        const mathOrders = [];
+        const matchOrders = [];
         orderDetailList.map((orderDetail) => {
             if (order.id === orderDetail.id.orderId) {
-                mathOrders.push(orderDetail);
+                matchOrders.push(orderDetail);
             }
         });
-        return mathOrders;
+        return matchOrders;
 
     }
     const fetchData = async () => {

@@ -11,7 +11,10 @@ import jwtDecode from 'jwt-decode'
 import _ from 'lodash'
 import { useLocation } from "react-router-dom";
 import Order from '../order/Order';
+import CustomerList from '../customer/CustomerList'
+import Customer from '../customer/Customer'
 const { Header, Sider, Content, Footer } = Layout;
+
 
 
 const Home = (props) => {
@@ -20,7 +23,7 @@ const Home = (props) => {
     const [user, setUser] = useState(null);
     const location = useLocation();
     let pathName = location.pathname;
-    
+
     if (pathName.lastIndexOf("/") !== 0) {
         pathName = pathName.slice(0, pathName.lastIndexOf("/")).concat("s");
     }
@@ -73,9 +76,11 @@ const Home = (props) => {
                         </Menu.Item>
                         {
                             user && user.role.description === "Admin"
-                            && <Menu.Item key="/users">
-                                <Icon type="team" />
-                                <span>Người dùng</span>
+                            && <Menu.Item key="/customers">
+                                <Link to="/customers">
+                                    <Icon type="team" />
+                                    <span>Người dùng</span>
+                                </Link>
                             </Menu.Item>
                         }
 
@@ -184,6 +189,16 @@ const Home = (props) => {
                                 path="/order/:orderId"
                                 exact
                                 component={Order}
+                            />
+                            <Route
+                                path="/customers"
+                                exact
+                                component={CustomerList}
+                            />
+                            <Route
+                                path="/customer/:customerId"
+                                exact
+                                component={Customer}
                             />
                         </Switch>
 

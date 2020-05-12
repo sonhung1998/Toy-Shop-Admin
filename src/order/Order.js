@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Form, Input, Divider, Card, Avatar, InputNumber, Select, Tag, Button } from 'antd'
+import { Form, Input, Divider, Card, Avatar, InputNumber, Select, Tag, Button ,message} from 'antd'
 import APIClient from '../Utils/APIClient'
 import moment from 'moment'
 import { ORDERSTATUS } from "../common/constant";
@@ -24,29 +24,27 @@ const OrderForm = (props) => {
         }
     };
 
-    useEffect(() => { fetchData() }, []);
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         props.form.validateFieldsAndScroll(async (err, values) => {
             if (!err) {
-                console.log('data receive from order:', values)
-                // let { upload } = values;
-                // let { image } = data;
-                // if (!_.isNil(upload) && !_.isEmpty(upload)) {
-                //     image = upload[0].name
-                // }
-
-                // values = { ...values, image }
-                // console.log("Received values of form: ", values);
-
-                // try {
-                //     await APIClient.PUT(`/product/${productId}`, values);
-                //     message.success("Cập nhật sản phẩm thành công !", 3)
-                // }
-                // catch (error) {
-                //     message.error(error, 20)
-                // }
+                console.log('data receive from order:', values);
+                const { customer, status, orderDetail, id } = values;
+                const firstKey = { customer, status, id }
+                const secondKey = [...orderDetail];
+                const data = { firstKey, secondKey }
+                console.log('data:', data)
+                try {
+                    await APIClient.PUT(`/order/${orderId}`, data);
+                    message.success("Cập nhật đơn hàng thành công !", 3)
+                }
+                catch (error) {
+                    message.error(error, 20)
+                }
             }
         });
     }
@@ -64,6 +62,14 @@ const OrderForm = (props) => {
                                 initialValue: `${orderId}`,
                             })
                                 (<Input disabled />)
+                        }
+                    </Form.Item>
+                    <Form.Item>
+                        {
+                            getFieldDecorator("customer.id", {
+                                initialValue: `${data[0].customer.id}`,
+                            })
+                                (<Input hidden />)
                         }
                     </Form.Item>
                     <Form.Item label="Họ" hasFeedback>
@@ -107,6 +113,7 @@ const OrderForm = (props) => {
                             {data[1].map((item, index) => {
                                 return (
                                     <Card
+                                        key={index}
                                         style={{ marginBottom: '10px' }}
                                         hoverable
                                         type="inner">
@@ -126,13 +133,13 @@ const OrderForm = (props) => {
                                                 </span>
                                             }
                                         />
-                                        <span style={{ float: 'right', marginTop: '-5.5%', color: 'red' }}>
+                                        <span style={{ float: 'right', marginTop: '-7.5%', color: 'red' }}>
                                             Số lượng:&nbsp;
                                             <Form.Item>
                                                 {
                                                     getFieldDecorator(`orderDetail[${index}].quantity`,
                                                         {
-                                                            initialValue: `${item.quantity}`,
+                                                            initialValue: item.quantity,
                                                         })
                                                         (<InputNumber
                                                             min={0}
@@ -140,7 +147,14 @@ const OrderForm = (props) => {
                                                         />)
                                                 }
                                             </Form.Item>
-
+                                            <Form.Item>
+                                                {
+                                                    getFieldDecorator(`orderDetail[${index}].id`, {
+                                                        initialValue: item.id
+                                                    })
+                                                        (<Input hidden />)
+                                                }
+                                            </Form.Item>
                                         </span>
                                     </Card>
                                 )

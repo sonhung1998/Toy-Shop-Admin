@@ -24,12 +24,12 @@ const ProductFormUpdate = (props) => {
     };
 
     useEffect(() => {
-        console.log('fetch data')
         fetchData();
     }, []);
 
 
     const validateName = (rule, value, callback) => {
+        //eslint-disable-next-line
         const regex = RegExp('[\!\@\#\$\%\^\&\*\\\+\=\|\:\;\"\'\<\>\,\.\/\?]+', 'img')
         if (value && regex.test(value)) {
             callback("Trong tên không được phép chứa ký tự đặc biệt !")
@@ -40,6 +40,7 @@ const ProductFormUpdate = (props) => {
     }
 
     const validateNumber = (rule, value, callback) => {
+        //eslint-disable-next-line
         const regex = RegExp('[^0-9\.]+', 'img')
         if (value && regex.test(value)) {
             callback("Trường này chỉ được phép chứa ký tự số !")
@@ -49,7 +50,7 @@ const ProductFormUpdate = (props) => {
         }
 
     }
-    
+
     const handleSubmit = (e) => {
         e.preventDefault();
         props.form.validateFieldsAndScroll(async (err, values) => {
@@ -238,13 +239,13 @@ const ProductFormUpdate = (props) => {
                         <Button
                             type="primary"
                             icon="setting"
-                            style={{ marginRight: 389, width: 400 }}
+                            style={{ width: 400 }}
                             htmlType="submit"
                         >
                             Cập nhật
                         </Button>
                         <GoBackButton
-                            style={{ width: 400 }}
+                            style={{ width: 400, float: 'right' }}
                             name="Hủy bỏ"
                         />
                     </Form.Item>
