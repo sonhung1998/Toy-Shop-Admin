@@ -150,7 +150,7 @@ const OrderList = (props) => {
                             onConfirm={() => { handleDeleteOrder(id) }}
                             okText="Có"
                             cancelText="Không">
-                            <Icon type="delete" style={{ color: 'red' }}/>
+                            <Icon type="delete" style={{ color: 'red' }} />
                         </Popconfirm>
 
                         <Divider type="vertical" />
@@ -169,6 +169,7 @@ const OrderList = (props) => {
         <div>
             <Divider>Danh sách đơn hàng</Divider>
             <Table
+                rowKey={record => record.id}
                 columns={columns}
                 dataSource={data}
                 expandedRowRender={

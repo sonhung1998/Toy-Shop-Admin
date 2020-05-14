@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Form, Input, Divider, Card, Avatar, InputNumber, Select, Tag, Button, message } from 'antd'
+import { Form, Input, Card, Select, Button, message } from 'antd'
 import APIClient from '../Utils/APIClient'
 import GoBackButton from '../Utils/GoBackButton.js';
 import { ROLE } from '../common/constant'
-import moment from 'moment'
 import _ from "lodash";
 
 const CustomerForm = ({ form }) => {
@@ -54,14 +53,15 @@ const CustomerForm = ({ form }) => {
         form.validateFieldsAndScroll(async (err, values) => {
             if (!err) {
 
-                console.log("Received values of form: ", values);
+                const dataSubmit = _.merge(data, values)
+                console.log('dataSubmit:', dataSubmit)
 
                 try {
-                    await APIClient.PUT(`/product/${customerId}`, values);
+                    await APIClient.PUT(`/customer/${customerId}`, dataSubmit);
                     message.success("Cập nhật sản phẩm thành công !", 3)
                 }
                 catch (error) {
-                    message.error(error, 20)
+                    console.log("Có lỗi xảy ra khi update customer:", error)
                 }
 
             }
@@ -126,6 +126,14 @@ const CustomerForm = ({ form }) => {
                                     initialValue: `${data.addressDetail}`,
                                 })
                                     (<Input />)
+                            }
+                        </Form.Item>
+                        <Form.Item>
+                            {
+                                getFieldDecorator('account.id', {
+                                    initialValue: _.get(data, 'account.id', null)
+                                })
+                                    (<Input hidden />)
                             }
                         </Form.Item>
                         <Form.Item label="Email" hasFeedback>

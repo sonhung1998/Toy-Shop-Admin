@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import APIClient from '../Utils/APIClient.js'
-import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button, Spin } from 'antd';
+import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import CollectionCreateForm from '../Utils/Forms/CollectionCreateForm.js'
 import { CATEGORIES, MANUFACTURERS } from '../common/constant.js'
@@ -174,12 +174,10 @@ const ProductList = () => {
             render: (id) => {
                 return (
                     <div style={{ fontSize: 'x-large' }}>
-                        <Link onClick={
-                            () => { handleDeleteProduct(id) }
-                        }
-                        >
-                            <Icon type="delete" />
-                        </Link>
+                        <Icon type="delete"
+                            style={{ color: 'red' }}
+                            onClick={() => { handleDeleteProduct(id) }}
+                        />
                         <Divider type="vertical" />
                         <Link to={`product/${id}`}>
                             <Icon type="setting" />
@@ -260,6 +258,7 @@ const ProductList = () => {
             <Row>
 
                 <Table
+                    rowKey={record => record.id}
                     columns={columns}
                     dataSource={data}
                     bordered

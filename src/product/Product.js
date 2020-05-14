@@ -25,6 +25,7 @@ const ProductFormUpdate = (props) => {
 
     useEffect(() => {
         fetchData();
+        //eslint-disable-next-line
     }, []);
 
 

@@ -3,16 +3,18 @@ import './Home.css'
 import { Layout, Menu, Icon, Row, Col, Badge, Avatar } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import ProductList from '../product/ProductList.js';
-import OrderList from '../order/OrderList'
-import Product from '../product/Product.js'
 import APIClient from '../Utils/APIClient.js'
 import jwtDecode from 'jwt-decode'
 import _ from 'lodash'
 import { useLocation } from "react-router-dom";
+import ProductList from '../product/ProductList.js';
+import Product from '../product/Product.js'
+import OrderList from '../order/OrderList'
 import Order from '../order/Order';
 import CustomerList from '../customer/CustomerList'
 import Customer from '../customer/Customer'
+import CategoryList from "../category/CategoryList";
+import Category from "../category/Category"
 const { Header, Sider, Content, Footer } = Layout;
 
 
@@ -99,8 +101,10 @@ const Home = (props) => {
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="/categories">
-                            <Icon type="unordered-list" />
-                            <span>Thể loại</span>
+                            <Link to="/categories">
+                                <Icon type="unordered-list" />
+                                <span>Thể loại</span>
+                            </Link>
                         </Menu.Item>
                         <Menu.Item key="/upload">
                             <Icon type="upload" />
@@ -199,6 +203,16 @@ const Home = (props) => {
                                 path="/customer/:customerId"
                                 exact
                                 component={Customer}
+                            />
+                             <Route
+                                path="/categories"
+                                exact
+                                component={CategoryList}
+                            />
+                              <Route
+                                path="/category/:categoryId"
+                                exact
+                                component={Category}
                             />
                         </Switch>
 
