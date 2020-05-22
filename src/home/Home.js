@@ -15,6 +15,8 @@ import CustomerList from '../customer/CustomerList'
 import Customer from '../customer/Customer'
 import CategoryList from "../category/CategoryList";
 import Category from "../category/Category"
+import UploadFile from "../UploadFile"
+import ChartCustom from '../chart/ChartCustom'
 const { Header, Sider, Content, Footer } = Layout;
 
 
@@ -24,6 +26,7 @@ const Home = (props) => {
     const [collapsed, setCollapsed] = useState(false);
     const [user, setUser] = useState(null);
     const location = useLocation();
+
     let pathName = location.pathname;
 
     if (pathName.lastIndexOf("/") !== 0) {
@@ -107,8 +110,10 @@ const Home = (props) => {
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="/upload">
-                            <Icon type="upload" />
-                            <span>Upload</span>
+                            <Link to="/upload">
+                                <Icon type="upload" />
+                                <span>Upload</span>
+                            </Link>
                         </Menu.Item>
                     </Menu>
                 </Sider>
@@ -204,21 +209,31 @@ const Home = (props) => {
                                 exact
                                 component={Customer}
                             />
-                             <Route
+                            <Route
                                 path="/categories"
                                 exact
                                 component={CategoryList}
                             />
-                              <Route
+                            <Route
                                 path="/category/:categoryId"
                                 exact
                                 component={Category}
+                            />
+                            <Route
+                                path="/upload"
+                                exact
+                                component={UploadFile}
+                            />
+                             <Route
+                                path={["/","/home"]}
+                                exact
+                                component={ChartCustom}
                             />
                         </Switch>
 
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
-                        Admin Toy Shop ©2019 sonhung3198@gmail.com
+                        Admin Car Shop ©2019 sonhung3198@gmail.com
                     </Footer>
                 </Layout>
             </Layout>

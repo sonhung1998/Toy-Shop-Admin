@@ -59,7 +59,7 @@ const LoginFormBase = (props) => {
                 color: "#40a9ff",
                 fontSize: 'xx-large',
             }}>
-                TOY SHOP
+                CAR SHOP
           </strong>
             <Form
                 {...layout}

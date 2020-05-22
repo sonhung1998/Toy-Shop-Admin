@@ -171,7 +171,7 @@ const OrderForm = (props) => {
                                     {ORDERSTATUS.map(
                                         item => {
                                             let color = "blue";
-                                            switch (item) {
+                                            switch (item.id) {
                                                 case "PENDING":
                                                     color = "blue"
                                                     break;
@@ -185,9 +185,9 @@ const OrderForm = (props) => {
                                                     break;
                                             }
                                             return (
-                                                <Select.Option key={item}>
+                                                <Select.Option key={item.id}>
                                                     <Tag color={`${color}`}>
-                                                        {item}
+                                                        {item.value}
                                                     </Tag>
                                                 </Select.Option>
                                             )

@@ -53,7 +53,18 @@ const MANUFACTURERS = [
 ]
 
 const ORDERSTATUS = [
-    'PENDING', 'REJECT', 'SUCCESS'
+    {
+        id:'PENDING',
+        value:'Chờ xử lý'
+    },
+    {
+        id:'SUCCESS',
+        value:'Thành công',
+    },
+    {
+        id:'REJECT',
+        value:'Thất bại'
+    }
 ]
 const ROLE = [
     {

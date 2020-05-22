@@ -1,4 +1,16 @@
-.ant-form-item{
+.ant-form-item {
     margin-bottom: 5px;
- }
- 
+}
+.upload {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+.upload label {
+    color: Black;
+    margin-bottom: 10px;
+}
+.upload input {
+    margin-bottom: 10px;
+}

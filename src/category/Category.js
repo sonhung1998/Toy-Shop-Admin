@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Form, Input, Card, Select, Button, message } from 'antd'
+import { Form, Input, Card, Button, message } from 'antd'
 import APIClient from '../Utils/APIClient'
 import GoBackButton from '../Utils/GoBackButton.js';
-import { ROLE } from '../common/constant'
 import _ from "lodash";
 
 const CategoryForm = ({ form }) => {
@@ -37,32 +36,21 @@ const CategoryForm = ({ form }) => {
         }
     }
 
-    const validateNumber = (rule, value, callback) => {
-        //eslint-disable-next-line
-        const regex = RegExp('[^0-9\.]+', 'img')
-        if (value && regex.test(value)) {
-            callback("Trường này không được phép chứa ký tự số !")
-        }
-        else {
-            callback()
-        }
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         form.validateFieldsAndScroll(async (err, values) => {
             if (!err) {
 
-                const dataSubmit = _.merge(data, values)
-                console.log('dataSubmit:', dataSubmit)
+                // const dataSubmit = _.merge(data, values)
+                console.log('dataSubmit:', values)
 
-                // try {
-                //     await APIClient.PUT(`/category/${categoryId}`, dataSubmit);
-                //     message.success("Cập nhật sản phẩm thành công !", 3)
-                // }
-                // catch (error) {
-                //     console.log("Có lỗi xảy ra khi update customer:", error)
-                // }
+                try {
+                    await APIClient.PUT(`/category/${categoryId}`, values);
+                    message.success("Cập nhật thể loại thành công !", 3)
+                }
+                catch (error) {
+                    console.log("Có lỗi xảy ra khi cập nhật thể loại:", error)
+                }
 
             }
         });
@@ -81,7 +69,24 @@ const CategoryForm = ({ form }) => {
                                     (<Input disabled />)
                             }
                         </Form.Item>
-                       
+                        <Form.Item label="Tên thể loại" hasFeedback>
+                            {
+                                getFieldDecorator("name", {
+                                    initialValue: data.name,
+                                    rules: [
+                                        {
+                                            validator: validateName
+                                        },
+                                        {
+                                            required: true,
+                                            message: 'Làm ơn nhập tên thể loại !',
+                                        },
+                                    ]
+                                })
+                                    (<Input />)
+                            }
+                        </Form.Item>
+
                         <Form.Item style={{ marginTop: 20 }}>
                             <Button
                                 type="primary"

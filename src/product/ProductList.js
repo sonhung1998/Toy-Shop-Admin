@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import APIClient from '../Utils/APIClient.js'
-import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button } from 'antd';
+import { Row, Table, Icon, Divider, Tag, Card, Select, Col, Button, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom';
 import CollectionCreateForm from '../Utils/Forms/CollectionCreateForm.js'
-import { CATEGORIES, MANUFACTURERS } from '../common/constant.js'
+import { MANUFACTURERS } from '../common/constant.js'
 const { Option } = Select;
 
 const ProductList = () => {
@@ -15,6 +15,7 @@ const ProductList = () => {
     const [pageSize, setPageSize] = useState(5);
     const [categoryId, setCategoryId] = useState(0);
     const [manufacturerId, setManufacturerId] = useState(0);
+    const [categories, setCategories] = useState(null);
 
     const getParams = () => {
         const params = {
@@ -25,9 +26,12 @@ const ProductList = () => {
     }
     const fetchData = async () => {
         try {
-            const data = await APIClient.GET('/products', getParams());
-            console.log(data)
-            setData(data);
+            const responses = await Promise.all([
+                APIClient.GET('/products', getParams()),
+                APIClient.GET(`/categories`)
+            ])
+            setData(responses[0]);
+            setCategories([{ id: 0, name: 'Tất cả' }, ...responses[1]]);
         } catch (error) {
             console.error('Error while fetch data:', error);
         }
@@ -81,7 +85,6 @@ const ProductList = () => {
             console.error("Error occur while delete product:", error);
         }
         setReset(!reset);
-
     }
 
     const oneChangePageSize = (current, size) => {
@@ -173,14 +176,29 @@ const ProductList = () => {
             dataIndex: 'id',
             render: (id) => {
                 return (
-                    <div style={{ fontSize: 'x-large' }}>
-                        <Icon type="delete"
-                            style={{ color: 'red' }}
-                            onClick={() => { handleDeleteProduct(id) }}
-                        />
-                        <Divider type="vertical" />
+                    <div style={{ fontSize: 'x-large' ,textAlign:'center'}}>
+                        <Popconfirm
+                            placement="topLeft"
+                            title={"Bạn có chắc chắn muốn xóa sản phẩm này ?"}
+                            onConfirm={() => { handleDeleteProduct(id) }}
+                            okText="Có"
+                            cancelText="Không"
+                        >
+                            <Icon
+                                type="delete"
+                                style={{ color: 'red', border: '2px solid red', padding: 5, marginRight:10}}
+                            />
+                        </Popconfirm>
+
                         <Link to={`product/${id}`}>
-                            <Icon type="setting" />
+                            <Icon
+                                type="setting"
+                                style={
+                                    {
+                                        border: '2px solid ',
+                                        padding: 5,
+                                    }}
+                            />
                         </Link>
                     </div >
                 )
@@ -212,7 +230,7 @@ const ProductList = () => {
                                 })}
                             </Select>
                         </Col>
-                        <Col span={12}>
+                        {categories && <Col span={12}>
                             <strong>Thể loại</strong>
                             <br />
                             <br />
@@ -222,15 +240,17 @@ const ProductList = () => {
                                 defaultValue='0'
                                 onChange={handleChangeCategory}
                             >
-                                {CATEGORIES.map(item => {
+                                {categories.map(item => {
                                     return (
                                         <Option key={item.id}>
-                                            {item.value}
+                                            {item.name}
                                         </Option>
                                     )
                                 })}
                             </Select>
                         </Col>
+                        }
+
                     </Row>
                 </Card>
             </Row>

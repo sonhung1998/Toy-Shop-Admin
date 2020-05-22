@@ -4,3 +4,8 @@
 .category-table tr th {
     text-align: center;
 }
+.tag {
+    font-size: larger;
+    padding: 7px;
+}
+

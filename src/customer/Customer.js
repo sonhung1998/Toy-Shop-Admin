@@ -61,7 +61,7 @@ const CustomerForm = ({ form }) => {
                     message.success("Cập nhật sản phẩm thành công !", 3)
                 }
                 catch (error) {
-                    console.log("Có lỗi xảy ra khi update customer:", error)
+                    console.log("Có lỗi xảy ra khi cập nhật tài khoàn người dùng:", error)
                 }
 
             }
