@@ -78,13 +78,6 @@ const ProductFormUpdate = (props) => {
         });
     }
 
-    const normFile = e => {
-        console.log('Upload event:', e);
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e && e.fileList;
-    };
 
     const onFileChange = event => {
         setSelectedFile(event.target.files[0])
@@ -98,11 +91,6 @@ const ProductFormUpdate = (props) => {
         APIClient.POST('/product/upload', formData);
         message.success("upload ảnh thành công !", 2)
     };
-
-    const onFileUpload = () => {
-
-    };
-
 
     return (
         <div>

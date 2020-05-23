@@ -1,13 +1,22 @@
 import React from 'react';
-import { Modal, Form, Input, Radio, Select } from 'antd';
+import { Modal, Form, Input, Select, Upload, Button, Icon } from 'antd';
 import './CollectionCreateForm.css'
-import { CATEGORIES, MANUFACTURERS } from '../../common/constant'
+import { MANUFACTURERS } from '../../common/constant'
+import APIClient from '../../Utils/APIClient'
 const { Option } = Select;
 const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
     // eslint-disable-next-line
     class extends React.Component {
+        normFile = e => {
+            console.log('Upload event:', e);
+            if (Array.isArray(e)) {
+                return e;
+            }
+            return e && e.fileList;
+        };
+
         render() {
-            const { visible, onCancel, onCreate, form } = this.props;
+            const { visible, onCancel, onCreate, form, categories } = this.props;
             const { getFieldDecorator } = form;
             const requireText = 'Trường này là bắt buộc'
             return (
@@ -65,9 +74,7 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                         </Form.Item>
                         <Form.Item label="Nhà sản xuất">
                             {getFieldDecorator('manufacturer.id')
-                                (<Select
-                                    onChange={null}
-                                    >
+                                (<Select>
                                     {MANUFACTURERS.map(item => {
                                         return (
                                             <Option key={item.id}>
@@ -82,21 +89,36 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
                         </Form.Item>
                         <Form.Item label="Thể loại">
                             {getFieldDecorator('category.id')
-                                (<Select
-                                    onChange={null}
-                                    >
-                                    {CATEGORIES.map(item => {
-                                        return (
-                                            <Option key={item.id}>
-                                                {item.value}
-                                            </Option>
-                                        )
+                                (<Select>
+                                    {categories && categories.map(item => {
+                                        if (item.id !== 0) {
+                                            return (
+                                                <Option key={item.id}>
+                                                    {item.name}
+                                                </Option>
+                                            )
+                                        }
+
                                     })}
                                 </Select>)
                             }
-
-
                         </Form.Item>
+                        {/* <Form.Item label="Upload Ảnh">
+                            {getFieldDecorator('upload', {
+                                valuePropName: 'fileUpload',
+                                getValueFromEvent: this.normFile,
+                            })(
+                                <Upload
+                                    method="post"
+                                    name="logo"
+                                    action="localhost:8080/api/product/upload"
+                                    listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> Click to upload
+                                 </Button>
+                                </Upload>
+                            )}
+                        </Form.Item> */}
                     </Form>
                 </Modal>
             );

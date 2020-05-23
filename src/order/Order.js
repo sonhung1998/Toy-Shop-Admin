@@ -18,6 +18,7 @@ const OrderForm = (props) => {
                 APIClient.GET(`/order/${orderId}`),
                 APIClient.GET(`/order/detail/${orderId}`)
             ])
+            console.log(responses)
             setData(responses);
         } catch (error) {
             console.error('Error while fetch data:', error);
@@ -33,13 +34,14 @@ const OrderForm = (props) => {
         props.form.validateFieldsAndScroll(async (err, values) => {
             if (!err) {
                 console.log('data receive from order:', values);
-                const { customer, status, orderDetail, id } = values;
+                let { customer, status, orderDetail, id } = values;
+                customer={...customer,account:data[0]?.customer?.account??null}
                 const firstKey = { customer, status, id }
                 const secondKey = [...orderDetail];
-                const data = { firstKey, secondKey }
-                console.log('data:', data)
+                const dataSubmit = { firstKey, secondKey }
+                console.log('data:', dataSubmit)
                 try {
-                    await APIClient.PUT(`/order/${orderId}`, data);
+                    await APIClient.PUT(`/order/${orderId}`, dataSubmit);
                     message.success("Cập nhật đơn hàng thành công !", 3)
                 }
                 catch (error) {

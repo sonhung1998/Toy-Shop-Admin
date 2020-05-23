@@ -271,6 +271,7 @@ const ProductList = () => {
                 <CollectionCreateForm
                     wrappedComponentRef={saveFormRef}
                     visible={visible}
+                    categories={categories}
                     onCancel={() => { setVisible(false) }}
                     onCreate={handleCreateProduct}
                 />

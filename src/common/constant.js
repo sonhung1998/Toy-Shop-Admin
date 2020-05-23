@@ -35,20 +35,20 @@ const MANUFACTURERS = [
 
     {
         id: 1,
-        value: 'Khang Vina'
+        value: 'Hyundai Thành Công'
     },
     {
         id: 2,
-        value: 'Xếp hình tia sáng'
+        value: 'Thaco'
 
     },
     {
         id: 3,
-        value: 'Công ty TNHH Mỹ Hải'
+        value: 'Remax'
     },
     {
         id: 4,
-        value: 'Đồ chơi trẻ em phú thái'
+        value: 'Mạnh Quân Auto'
     }
 ]
 

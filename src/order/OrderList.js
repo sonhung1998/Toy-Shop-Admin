@@ -312,46 +312,48 @@ const OrderList = (props) => {
                                 onChange={handleChangeProduct}
                             >
                                 {
-                                    products.map(product => (
-                                        <Option
-                                            key={product.id}
-                                            style={{ borderBottom: '1px solid #e8e8e8' }}
-                                            label={product.name}
-                                        >
-                                            {product.id !== 0
-                                                ? <Row style={{ textAlign: 'center' }}>
-                                                    <Col span={12}>
-                                                        <Card
-                                                            bordered={false}
-                                                            style={{ background: 'transparent' }}
-                                                        >
-                                                            <Card.Meta
-                                                                avatar={
-                                                                    <Avatar
-                                                                        src={require('../../../Public/Images/' + product.image)}
-                                                                        size={60}
-                                                                        shape="square"
-                                                                    />
-                                                                }
-                                                                title={product.name}
-                                                                description={
-                                                                    <span style={{ color: 'blue' }}>
-                                                                        {product.description}
-                                                                    </span>
-                                                                }
-                                                            />
-                                                        </Card>
-                                                    </Col>
-                                                    <Col span={12}>
-                                                        <p>Giá</p>
-                                                        <span style={{ color: 'green' }}>{product.price} VND</span>
-                                                    </Col>
-                                                </Row>
-                                                : <span>{product.name}</span>
-                                            }
-
-                                        </Option>
-                                    ))
+                                    products.map(product => {
+                                        return (
+                                            <Option
+                                                key={product.id}
+                                                style={{ borderBottom: '1px solid #e8e8e8' }}
+                                                label={product.name}
+                                            >
+                                                {product.id !== 0 && product.image
+                                                    ? <Row style={{ textAlign: 'center' }}>
+                                                        <Col span={12}>
+                                                            <Card
+                                                                bordered={false}
+                                                                style={{ background: 'transparent' }}
+                                                            >
+                                                                <Card.Meta
+                                                                    avatar={
+                                                                        <Avatar
+                                                                            src={require('../../../Public/Images/' + product.image)}
+                                                                            size={60}
+                                                                            shape="square"
+                                                                        />
+                                                                    }
+                                                                    title={product.name}
+                                                                    description={
+                                                                        <span style={{ color: 'blue' }}>
+                                                                            {product.description}
+                                                                        </span>
+                                                                    }
+                                                                />
+                                                            </Card>
+                                                        </Col>
+                                                        <Col span={12}>
+                                                            <p>Giá</p>
+                                                            <span style={{ color: 'green' }}>{product.price} VND</span>
+                                                        </Col>
+                                                    </Row>
+                                                    : <span>{product.name}</span>
+                                                }
+                                            </Option>
+                                        )
+                                    }
+                                    )
                                 }
                             </Select>
                         </Col>
@@ -371,7 +373,7 @@ const OrderList = (props) => {
                 data && data.length === 0
                     ? <Result status="error"
                         title="Không tìm thấy dữ liệu phù hợp"
-                        ></Result>
+                    ></Result>
                     : <Table
                         rowKey={record => record.id}
                         columns={columns}

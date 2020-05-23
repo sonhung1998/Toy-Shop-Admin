@@ -70,6 +70,11 @@ const CategoryList = () => {
                 </Tag>
         },
         {
+            title: 'Số lượng trong kho',
+            dataIndex: 'amount',
+            key: 'amount'
+        },
+        {
             title: 'Thao tác',
             key: 'action',
             dataIndex: 'id',

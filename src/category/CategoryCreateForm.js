@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Modal, Input, Select, Icon, message } from 'antd'
+import { Form, Modal, Input, Select, Icon, message, InputNumber } from 'antd'
 import './CategoryCreateForm.css'
 const CategoryCreateFormBase = (props) => {
 
@@ -48,6 +48,19 @@ const CategoryCreateFormBase = (props) => {
                                 ],
                             })
                                 (<Input />)
+                        }
+                    </Form.Item>
+                    <Form.Item label="Số lượng trong kho" hasFeedback>
+                        {
+                            getFieldDecorator("amount", {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng nhập số lượng hàng',
+                                    },
+                                ],
+                            })
+                                (<InputNumber />)
                         }
                     </Form.Item>
 

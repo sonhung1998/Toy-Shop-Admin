@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Form, Input, Card, Button, message } from 'antd'
+import { Form, Input, Card, Button, message, InputNumber } from 'antd'
 import APIClient from '../Utils/APIClient'
 import GoBackButton from '../Utils/GoBackButton.js';
 import _ from "lodash";
@@ -84,6 +84,20 @@ const CategoryForm = ({ form }) => {
                                     ]
                                 })
                                     (<Input />)
+                            }
+                        </Form.Item>
+                        <Form.Item label="Số lượng còn trong kho" hasFeedback>
+                            {
+                                getFieldDecorator("amount", {
+                                    initialValue: data.amount,
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: 'Làm ơn nhập số lượng hàng trong kho!',
+                                        },
+                                    ]
+                                })
+                                    (<InputNumber />)
                             }
                         </Form.Item>
 
